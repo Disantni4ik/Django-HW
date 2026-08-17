@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+
+{% block title %} {{ title }} {% endblock title%}
+
+{% block content %}
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+
+<h1>Список Продуктів</h1>
+
+<table style="width: 100%">
+    <tr>
+        <th>Назва</th>
+        <th>Ціна</th>
+        <th>Опис</th>
+    </tr>
+    {% for product in products %}
+        <tr style="text-align: center">
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.description }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock content %}
