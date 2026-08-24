@@ -1,0 +1,59 @@
+{% extends "main/base.html" %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block content %}
+
+<div class="categories-menu">
+  <a
+    href="{% url 'main:product_list' %}"
+    class="category-link {% if not category %}active{% endif %}"
+  >
+    Всі товари
+  </a>
+  {% for cat in categories %}
+  <a
+    href="{{ cat.get_absolute_url }}"
+    class="category-link {% if category.slug == cat.slug %}active{% endif %}"
+  >
+    {{ cat.name }}
+  </a>
+  {% endfor %}
+</div>
+
+<h1 class="page-title">Список Продуктів</h1>
+
+<div class="table-container">
+  <table class="products-table">
+    <thead>
+      <tr>
+        <th>Зображення</th>
+        <th>Назва</th>
+        <th>Ціна</th>
+        <th>Опис</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td class="product-img-col">
+          {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              alt="{{ product.name }}"
+              class="product-img"
+            />
+          {% else %}
+            <div class="no-image">Немає фото</div>
+          {% endif %}
+        </td>
+        <td class="product-name">{{ product.name }}</td>
+        <td class="product-price">{{ product.price }} грн</td>
+        <td class="product-desc">{{ product.description }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}
