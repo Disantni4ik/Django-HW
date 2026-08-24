@@ -16,44 +16,94 @@
     href="{{ cat.get_absolute_url }}"
     class="category-link {% if category.slug == cat.slug %}active{% endif %}"
   >
-    {{ cat.name }}
+    {{ cat.name }} ({{ cat.products.count }})
   </a>
   {% endfor %}
 </div>
 
+<div class="sort-container">
+  <span class="sort-label">Сортувати:</span>
+  <div class="sort-buttons">
+    <a
+      href="?sort=new"
+      class="sort-btn {% if current_sort == 'new' or not current_sort %}active{% endif %}"
+    >
+      Нові
+    </a>
+    <a
+      href="?sort=old"
+      class="sort-btn {% if current_sort == 'old' %}active{% endif %}"
+    >
+      Старі
+    </a>
+    <a
+      href="?sort=popular"
+      class="sort-btn {% if current_sort == 'popular' %}active{% endif %}"
+    >
+      Популярні
+    </a>
+    <a
+      href="?sort=price_asc"
+      class="sort-btn {% if current_sort == 'price_asc' %}active{% endif %}"
+    >
+      Дешевші
+    </a>
+    <a
+      href="?sort=price_desc"
+      class="sort-btn {% if current_sort == 'price_desc' %}active{% endif %}"
+    >
+      Дорожчі
+    </a>
+  </div>
+</div>
+
 <h1 class="page-title">Список Продуктів</h1>
 
-<div class="table-container">
-  <table class="products-table">
-    <thead>
-      <tr>
-        <th>Зображення</th>
-        <th>Назва</th>
-        <th>Ціна</th>
-        <th>Опис</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in products %}
-      <tr>
-        <td class="product-img-col">
+{% if products %}
+  <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+      <a href="{{ product.get_absolute_url }}" class="product-image-link">
+        <div class="product-image-wrapper">
           {% if product.image %}
             <img
               src="{{ product.image.url }}"
               alt="{{ product.name }}"
-              class="product-img"
+              class="product-image"
             />
           {% else %}
-            <div class="no-image">Немає фото</div>
+            <div class="no-image-placeholder">
+              <span>Немає фото</span>
+            </div>
           {% endif %}
-        </td>
-        <td class="product-name">{{ product.name }}</td>
-        <td class="product-price">{{ product.price }} грн</td>
-        <td class="product-desc">{{ product.description }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+        </div>
+      </a>
+
+      <div class="product-info">
+        <h3 class="product-title">
+          <a href="{{ product.get_absolute_url }}" class="product-title-link">
+            {{ product.name }}
+          </a>
+        </h3>
+
+        <div class="product-views">
+          <span>{{ product.views }} переглядів</span>
+        </div>
+
+        <p class="product-desc">{{ product.description|truncatewords:15 }}</p>
+
+        <div class="product-footer">
+          <span class="product-price">{{ product.price }} грн</span>
+          <a href="{{ product.get_absolute_url }}" class="btn-details">
+            Детальніше
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="empty-list">У цій категорії поки немає товарів.</p>
+{% endif %}
 
 {% endblock content %}

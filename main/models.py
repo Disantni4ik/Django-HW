@@ -19,7 +19,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     slug = models.SlugField(max_length=100, unique=True, verbose_name='Слаг для URL')
     image = models.ImageField(upload_to='products/%Y%m/%d', blank=True, verbose_name='Зображення')
     views = models.IntegerField(default=0, verbose_name='Кількість переглядів')
@@ -34,4 +34,4 @@ class Product(models.Model):
         return f'{self.name} | {self.created_at}'
 
     def get_absolute_url(self):
-        return reverse('main:product_detail', args=[self.slug])
+        return reverse('main:product_detail.html', args=[self.id, self.slug])
