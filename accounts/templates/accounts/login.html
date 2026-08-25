@@ -1,0 +1,63 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Вхід — Магазин{% endblock title %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2 class="auth-title">Вхід до системи</h2>
+      <p class="auth-subtitle">Введіть свій логін та пароль для доступу</p>
+    </div>
+
+    <div class="auth-body">
+      {% if form.non_field_errors %}
+        <div class="form-errors">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <form method="post" class="auth-form" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="form-label" for="username">{{ form.username.label|default:"Ім'я користувача" }}</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-input"
+            value="{{ form.username.value|default:'' }}"
+            required
+          >
+          {% if form.username.errors %}
+            <div class="field-error">{{ form.username.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">{{ form.password.label|default:"Пароль" }}</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            required
+          >
+          {% if form.password.errors %}
+            <div class="field-error">{{ form.password.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn-auth">
+          Увійти
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Ще не маєте акаунту? <a href="{% url 'accounts:register' %}">Зареєструватися</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

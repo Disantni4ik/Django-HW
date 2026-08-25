@@ -1,16 +1,41 @@
 {% load static %}
-
 <!doctype html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %} {% endblock title %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Інтернет-магазин{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
 </head>
 <body>
-    <main>{% block content %} {% endblock content %}</main>
+    <header class="navbar">
+      <div class="navbar-container">
+        <a href="{% url 'main:product_list' %}" class="nav-brand">ShopApp</a>
+
+        <nav class="nav-links">
+          <a href="{% url 'main:product_list' %}" class="nav-item">Каталог</a>
+
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
+              <a href="{% url 'admin:index' %}" class="nav-item nav-admin" target="_blank">Адмін-панель</a>
+            {% endif %}
+            <a href="{% url 'accounts:profile' %}" class="nav-item nav-user">
+              👤 {{ user.username }}
+            </a>
+            <form method="post" action="{% url 'accounts:logout' %}" class="nav-inline-form">
+              {% csrf_token %}
+              <button type="submit" class="nav-btn-logout">Вийти</button>
+            </form>
+          {% else %}
+            <a href="{% url 'accounts:login' %}" class="nav-item">Вхід</a>
+            <a href="{% url 'accounts:register' %}" class="btn-register">Реєстрація</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
 </body>
 </html>
