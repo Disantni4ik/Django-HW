@@ -37,5 +37,18 @@
     <main>
         {% block content %}{% endblock content %}
     </main>
+
+    <footer style="border-top: 1px solid var(--border-color); background-color: var(--card-bg); padding: 24px 0; margin-top: auto;">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 14px; color: var(--text-muted);">
+        <div>
+          © 2026 ShopApp. Всі права захищені.
+        </div>
+        <div>
+          <a href="{% url 'main:contact' %}" class="nav-item" style="font-weight: 600;">
+            Контакти
+          </a>
+        </div>
+      </div>
+    </footer>
 </body>
 </html>
