@@ -1,0 +1,121 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Кошик покупця{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+  <h1 class="page-title">Ваш кошик</h1>
+
+  {% if cart and cart|length > 0 %}
+    <div class="cart-table-card">
+      <div class="cart-table-wrapper">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th style="width: 90px;">Товар</th>
+              <th>Назва</th>
+              <th style="width: 170px;">Кількість</th>
+              <th style="width: 140px;">Ціна</th>
+              <th style="width: 140px;">Сума</th>
+              <th style="width: 70px; text-align: center;">Дія</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart %}
+              {% with product=item.product %}
+                <tr>
+                  <!-- 1. Зображення товару -->
+                  <td>
+                    <div class="cart-product-thumb">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                      {% else %}
+                        <div class="cart-no-thumb">Немає фото</div>
+                      {% endif %}
+                    </div>
+                  </td>
+
+                  <!-- 2. Назва товару -->
+                  <td>
+                    <a href="{{ product.get_absolute_url|default:'#' }}" class="cart-product-title">
+                      {{ product.name }}
+                    </a>
+                  </td>
+
+                  <!-- 3. Кількість (форма оновлення) -->
+                  <td>
+                    <form action="{% url 'main:cart_add' product.id %}" method="post" class="cart-qty-form">
+                      {% csrf_token %}
+                      <input
+                        type="number"
+                        name="quantity"
+                        value="{{ item.quantity }}"
+                        min="1"
+                        max="99"
+                        required
+                        class="cart-qty-input"
+                      >
+                      <input type="hidden" name="override" value="True">
+                      <button type="submit" class="btn-cart-update" title="Оновити кількість">
+                        Оновити
+                      </button>
+                    </form>
+                  </td>
+
+                  <!-- 4. Ціна за одиницю -->
+                  <td class="cart-price">
+                    {{ item.price }} ₴
+                  </td>
+
+                  <!-- 5. Загальна вартість за позицію -->
+                  <td class="cart-total-price">
+                    {{ item.total_price }} ₴
+                  </td>
+
+                  <!-- 6. Дія (видалення) -->
+                  <td style="text-align: center;">
+                    <form action="{% url 'main:cart_remove' product.id %}" method="post" style="margin: 0; display: inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="cart-remove-link" title="Видалити товар" style="cursor: pointer; border: none;">
+                        &times;
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endwith %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Загальна сума кошика -->
+      <div class="cart-summary-bar">
+        <span class="cart-summary-label">Загальна сума:</span>
+        <span class="cart-summary-value">{{ cart.get_total_price }} ₴</span>
+      </div>
+    </div>
+
+    <!-- Кнопки навігації та переходу до оформлення -->
+    <div class="cart-actions">
+      <a href="{% url 'main:product_list' %}" class="btn-back">
+        ← Продовжити покупки
+      </a>
+      <a href="#" class="btn-checkout">
+        Оформити замовлення →
+      </a>
+    </div>
+
+  {% else %}
+    <!-- Стан порожнього кошика -->
+    <div class="cart-empty-card">
+      <div class="cart-empty-icon">🛒</div>
+      <h2 class="cart-empty-title">Кошик порожній</h2>
+      <p class="cart-empty-desc">Схоже, ви ще не додали жодного товару до кошика.</p>
+      <a href="{% url 'main:product_list' %}" class="btn-back" style="display: inline-flex; align-self: center;">
+        ← Повернутися до каталогу
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

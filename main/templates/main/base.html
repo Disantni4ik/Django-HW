@@ -15,6 +15,11 @@
         <nav class="nav-links">
           <a href="{% url 'main:product_list' %}" class="nav-item">Каталог</a>
 
+
+            <a href="{% url 'main:cart_detail' %}" class="nav-item cart-badge-link">
+                🛒 Кошик ({{ cart|length }})
+            </a>
+
           {% if user.is_authenticated %}
             {% if user.is_staff %}
               <a href="{% url 'admin:index' %}" class="nav-item nav-admin" target="_blank">Адмін-панель</a>

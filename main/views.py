@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
+from main.cart import Cart
 from main.forms import ContactForm
 from main.models import Product, Category
 
@@ -104,3 +106,27 @@ def contact_view(request):
         form = ContactForm()
 
     return render(request, 'main/contact.html', {'title': 'Відправити повідомлення', 'form': form})
+
+@require_POST
+def cart_add(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    quantity = int(request.POST.get('quantity', 1))
+    override = request.POST.get('override', False)
+
+    if isinstance(override, str):
+        override = override.lower() in ['true', '1', 'yes']
+
+    cart.add(product=product, quantity=quantity, override_quantity=override)
+    return redirect('main:cart_detail')
+
+def cart_remove(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    cart.remove(product)
+    return redirect('main:cart_detail')
+
+def cart_detail(request):
+    return render(request, 'main/cart_detail.html', {
+        'title': 'Кошик покупця'
+    })

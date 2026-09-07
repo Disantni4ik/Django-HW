@@ -97,6 +97,15 @@
           <a href="{{ product.get_absolute_url }}" class="btn-details">
             Детальніше
           </a>
+
+          <form action="{% url 'main:cart_add' product.id %}" method="post" style="margin: 0;">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="override" value="False">
+              <button type="submit" class="btn-add-to-cart" title="Додати в кошик">
+                В кошик
+              </button>
+          </form>
         </div>
       </div>
     </div>
